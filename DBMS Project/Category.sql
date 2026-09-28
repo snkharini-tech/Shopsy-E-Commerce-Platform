@@ -1,0 +1,86 @@
+
+ CREATE TABLE Category (
+     Category_ID NUMBER PRIMARY KEY,
+     Category_Name VARCHAR2(100) UNIQUE,
+     Description VARCHAR2(200)
+);
+
+Table created.
+
+INSERT INTO Category VALUES (1, 'Electronics', 'Electronic products');
+
+1 row created.
+
+INSERT INTO Category VALUES (2, 'Fashion', 'Fashion and clothing products');
+
+1 row created.
+
+INSERT INTO Category VALUES (3, 'Home Appliances', 'Home appliance products');
+
+1 row created.
+
+INSERT INTO Category VALUES (4, 'Sports', 'Sports and fitness products');
+
+1 row created.
+
+INSERT INTO Category VALUES (5, 'Books', 'Books and educational products');
+
+1 row created.
+
+SELECT * FROM Category;
+
+CATEGORY_ID
+-----------
+CATEGORY_NAME
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+          1
+Electronics
+Electronic products
+
+          2
+Fashion
+Fashion and clothing products
+
+CATEGORY_ID
+-----------
+CATEGORY_NAME
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+
+          3
+Home Appliances
+Home appliance products
+
+          4
+Sports
+
+CATEGORY_ID
+-----------
+CATEGORY_NAME
+--------------------------------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+Sports and fitness products
+
+          5
+Books
+Books and educational products
+
+
+  UPDATE Category
+  SET Category_Name = 'Mobile Accessories'
+  WHERE Category_ID = 1;
+
+1 row updated.
+
+ DELETE FROM Category
+ WHERE Category_ID = 5;
+
+1 row deleted.
+
+COMMIT;
+
+Commit complete.
