@@ -1,0 +1,354 @@
+ CREATE TABLE Seller (
+        Seller_ID NUMBER PRIMARY KEY,
+        Seller_Name VARCHAR2(50) NOT NULL,
+        Email VARCHAR2(50) UNIQUE,
+        Phone VARCHAR2(15),
+        Address VARCHAR2(100)
+    );
+
+Table created.
+
+INSERT INTO Seller VALUES (1, 'ABC Traders', 'abc@gmail.com', '9876543210', 'Chennai');
+
+1 row created.
+
+INSERT INTO Seller VALUES (2, 'Siva Stores', 'siva@gmail.com', '9876543211', 'Chromepet');
+
+1 row created.
+
+INSERT INTO Seller VALUES (3, 'Sri Enterprises', 'sri@gmail.com', '9876543212', 'Tambaram');
+
+1 row created.
+
+INSERT INTO Seller VALUES (4, 'Kumar Mart', 'kumar@gmail.com', '9876543213', 'Pallavaram');
+
+1 row created.
+
+INSERT INTO Seller VALUES (5, 'Ravi Products', 'ravi@gmail.com', '9876543214', 'Guindy');
+
+1 row created.
+
+INSERT INTO Seller VALUES (6, 'Green Shop', 'green@gmail.com', '9876543215', 'Velachery');
+
+1 row created.
+
+SELECT * FROM Seller;
+
+ SELLER_ID SELLER_NAME
+---------- --------------------------------------------------
+EMAIL                                              PHONE
+-------------------------------------------------- ---------------
+ADDRESS
+--------------------------------------------------------------------------------
+         1 ABC Traders
+abc@gmail.com                                      9876543210
+Chennai
+
+         2 Siva Stores
+siva@gmail.com                                     9876543211
+Chromepet
+
+ SELLER_ID SELLER_NAME
+---------- --------------------------------------------------
+EMAIL                                              PHONE
+-------------------------------------------------- ---------------
+ADDRESS
+--------------------------------------------------------------------------------
+
+         3 Sri Enterprises
+sri@gmail.com                                      9876543212
+Tambaram
+
+         4 Kumar Mart
+kumar@gmail.com                                    9876543213
+
+ SELLER_ID SELLER_NAME
+---------- --------------------------------------------------
+EMAIL                                              PHONE
+-------------------------------------------------- ---------------
+ADDRESS
+--------------------------------------------------------------------------------
+Pallavaram
+
+         5 Ravi Products
+ravi@gmail.com                                     9876543214
+Guindy
+
+         6 Green Shop
+
+ SELLER_ID SELLER_NAME
+---------- --------------------------------------------------
+EMAIL                                              PHONE
+-------------------------------------------------- ---------------
+ADDRESS
+--------------------------------------------------------------------------------
+green@gmail.com                                    9876543215
+Velachery
+
+
+6 rows selected.
+
+
+CREATE TABLE Inventory (
+        Inventory_ID NUMBER PRIMARY KEY,
+        Product_ID NUMBER,
+        Available_Stock NUMBER,
+        Last_Updated DATE,
+        FOREIGN KEY (Product_ID) REFERENCES Product(Product_ID)
+    );
+
+Table created.
+
+
+INSERT INTO Inventory VALUES (1001, 101, 20, SYSDATE);
+
+1 row created.
+
+INSERT INTO Inventory VALUES (1002, 102, 30, SYSDATE);
+
+1 row created.
+
+INSERT INTO Inventory VALUES (1003, 103, 50, SYSDATE);
+
+1 row created.
+
+INSERT INTO Inventory VALUES (1004, 104, 40, SYSDATE);
+
+1 row created.
+
+INSERT INTO Inventory VALUES (1005, 105, 60, SYSDATE);
+
+1 row created.
+
+INSERT INTO Inventory VALUES (1006, 106, 15, SYSDATE);
+
+1 row created.
+
+
+SELECT * FROM Inventory;
+
+INVENTORY_ID PRODUCT_ID AVAILABLE_STOCK LAST_UPDA
+------------ ---------- --------------- ---------
+        1001        101              20 29-SEP-26
+        1002        102              30 29-SEP-26
+        1003        103              50 29-SEP-26
+        1004        104              40 29-SEP-26
+        1005        105              60 29-SEP-26
+        1006        106              15 29-SEP-26
+
+6 rows selected.
+
+
+SELECT
+        Seller.Seller_Name,
+        Product.Product_Name,
+        Product.Product_ID,
+        Product.Price,
+        Product.Stock
+    FROM Seller
+    JOIN Product
+    ON Seller.Seller_ID = Product.Seller_ID;
+
+SELLER_NAME
+--------------------------------------------------
+PRODUCT_NAME                                       PRODUCT_ID      PRICE
+-------------------------------------------------- ---------- ----------
+     STOCK
+----------
+ABC Traders
+Laptop                                                    101      55000
+        20
+
+Siva Stores
+Smartphone                                                102      25000
+        30
+
+SELLER_NAME
+--------------------------------------------------
+PRODUCT_NAME                                       PRODUCT_ID      PRICE
+-------------------------------------------------- ---------- ----------
+     STOCK
+----------
+
+Sri Enterprises
+Headphones                                                103       2500
+        50
+
+Kumar Mart
+Keyboard                                                  104       1500
+
+SELLER_NAME
+--------------------------------------------------
+PRODUCT_NAME                                       PRODUCT_ID      PRICE
+-------------------------------------------------- ---------- ----------
+     STOCK
+----------
+        40
+
+Ravi Products
+Mouse                                                     105        800
+        60
+
+Green Shop
+
+SELLER_NAME
+--------------------------------------------------
+PRODUCT_NAME                                       PRODUCT_ID      PRICE
+-------------------------------------------------- ---------- ----------
+     STOCK
+----------
+Monitor                                                   106      12000
+        15
+
+
+6 rows selected.
+
+SELECT
+        p.Product_ID,
+        p.Product_Name,
+        i.Available_Stock
+    FROM Product p
+    JOIN Inventory i
+    ON p.Product_ID = i.Product_ID
+    WHERE i.Available_Stock > 0;
+
+PRODUCT_ID PRODUCT_NAME                                       AVAILABLE_STOCK
+---------- -------------------------------------------------- ---------------
+       101 Laptop                                                          20
+       102 Smartphone                                                      30
+       103 Headphones                                                      50
+       104 Keyboard                                                        40
+       105 Mouse                                                           60
+       106 Monitor                                                         15
+
+6 rows selected.
+
+SELECT
+        p.Product_ID,
+        p.Product_Name,
+        i.Available_Stock,
+        'Out of Stock' AS Stock_Status
+    FROM Product p
+    JOIN Inventory i
+    ON p.Product_ID = i.Product_ID
+    WHERE i.Available_Stock = 0;
+
+no rows selected
+
+
+UPDATE Inventory
+    SET Available_Stock = 35
+    WHERE Inventory_ID = 1001;
+
+1 row updated.
+
+
+SELECT
+        i.Inventory_ID,
+        p.Product_Name,
+        s.Seller_Name,
+        i.Available_Stock,
+        CASE
+            WHEN i.Available_Stock > 0 THEN 'Available'
+            ELSE 'Out of Stock'
+        END AS Stock_Status,
+       i.Last_Updated
+   FROM Inventory i
+   JOIN Product p
+   ON i.Product_ID = p.Product_ID
+   JOIN Seller s
+   ON p.Seller_ID = s.Seller_ID;
+
+INVENTORY_ID PRODUCT_NAME
+------------ --------------------------------------------------
+SELLER_NAME                                        AVAILABLE_STOCK STOCK_STATUS
+-------------------------------------------------- --------------- ------------
+LAST_UPDA
+---------
+        1001 Laptop
+ABC Traders                                                     35 Available
+29-SEP-26
+
+        1002 Smartphone
+Siva Stores                                                     30 Available
+29-SEP-26
+
+INVENTORY_ID PRODUCT_NAME
+------------ --------------------------------------------------
+SELLER_NAME                                        AVAILABLE_STOCK STOCK_STATUS
+-------------------------------------------------- --------------- ------------
+LAST_UPDA
+---------
+
+        1003 Headphones
+Sri Enterprises                                                 50 Available
+29-SEP-26
+
+        1004 Keyboard
+Kumar Mart                                                      40 Available
+
+INVENTORY_ID PRODUCT_NAME
+------------ --------------------------------------------------
+SELLER_NAME                                        AVAILABLE_STOCK STOCK_STATUS
+-------------------------------------------------- --------------- ------------
+LAST_UPDA
+---------
+29-SEP-26
+
+        1005 Mouse
+Ravi Products                                                   60 Available
+29-SEP-26
+
+        1006 Monitor
+
+INVENTORY_ID PRODUCT_NAME
+------------ --------------------------------------------------
+SELLER_NAME                                        AVAILABLE_STOCK STOCK_STATUS
+-------------------------------------------------- --------------- ------------
+LAST_UPDA
+---------
+Green Shop                                                      15 Available
+29-SEP-26
+
+
+6 rows selected.
+
+SELECT
+        s.Seller_Name,
+       SUM(i.Available_Stock) AS Total_Stock
+    FROM Seller s
+    JOIN Product p
+    ON s.Seller_ID = p.Seller_ID
+    JOIN Inventory i
+    ON p.Product_ID = i.Product_ID
+    GROUP BY s.Seller_Name;
+
+SELLER_NAME                                        TOTAL_STOCK
+-------------------------------------------------- -----------
+ABC Traders                                                 35
+Siva Stores                                                 30
+Sri Enterprises                                             50
+Kumar Mart                                                  40
+Ravi Products                                               60
+Green Shop                                                  15
+
+6 rows selected.
+
+
+SELECT
+        CASE
+            WHEN Available_Stock > 0 THEN 'Available'
+            ELSE 'Out of Stock'
+        END AS Stock_Status,
+        COUNT(*) AS Product_Count
+    FROM Inventory
+    GROUP BY
+        CASE
+           WHEN Available_Stock > 0 THEN 'Available'
+           ELSE 'Out of Stock'
+        END;
+
+STOCK_STATUS PRODUCT_COUNT
+------------ -------------
+Available                6
+
