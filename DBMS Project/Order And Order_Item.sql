@@ -1,0 +1,195 @@
+
+CREATE TABLE Orders (
+        Order_ID NUMBER PRIMARY KEY,
+        Customer_ID NUMBER,
+        Order_Date DATE,
+        Order_Status VARCHAR2(20),
+        Total_Amount NUMBER(10,2),
+       FOREIGN KEY (Customer_ID) REFERENCES Customer(ID)
+    );
+
+Table created.
+
+CREATE TABLE Order_Item (
+       OrderItem_ID NUMBER PRIMARY KEY,
+       Order_ID NUMBER,
+       Product_ID NUMBER,
+       Quantity NUMBER NOT NULL,
+       Unit_Price NUMBER(10,2) NOT NULL,
+       FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID),
+       FOREIGN KEY (Product_ID) REFERENCES Product(Product_ID)
+   );
+
+Table created.
+
+INSERT INTO Orders VALUES
+(1001, 1, DATE '2026-09-01', 'Placed', 2098.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1002, 2, DATE '2026-09-03', 'Confirmed', 1499.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1003, 3, DATE '2026-09-05', 'Shipped', 2598.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1004, 4, DATE '2026-09-07', 'Delivered', 1999.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1005, 5, DATE '2026-09-10', 'Placed', 450.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1006, 1, DATE '2026-09-12', 'Confirmed', 1299.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1007, 3, DATE '2026-09-15', 'Shipped', 1999.00);
+
+1 row created.
+
+INSERT INTO Orders VALUES
+(1008, 5, DATE '2026-09-18', 'Delivered', 1049.00);
+
+1 row created.
+
+SELECT * FROM Orders;
+
+  ORDER_ID CUSTOMER_ID ORDER_DAT ORDER_STATUS         TOTAL_AMOUNT
+---------- ----------- --------- -------------------- ------------
+      1001           1 01-SEP-26 Placed                       2098
+      1002           2 03-SEP-26 Confirmed                    1499
+      1003           3 05-SEP-26 Shipped                      2598
+      1004           4 07-SEP-26 Delivered                    1999
+      1005           5 10-SEP-26 Placed                        450
+      1006           1 12-SEP-26 Confirmed                    1299
+      1007           3 15-SEP-26 Shipped                      1999
+      1008           5 18-SEP-26 Delivered                    1049
+
+8 rows selected.
+
+INSERT INTO Order_Item VALUES
+(1, 1001, 101, 1, 1499.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(2, 1001, 102, 1, 599.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(3, 1002, 103, 1, 1299.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(4, 1003, 104, 1, 1999.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(5, 1003, 105, 1, 450.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(6, 1004, 104, 1, 1999.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(7, 1005, 105, 2, 450.00);
+
+1 row created.
+
+INSERT INTO Order_Item VALUES
+(8, 1006, 103, 1, 1299.00);
+
+1 row created.
+
+SELECT * FROM Order_Item;
+
+ORDERITEM_ID   ORDER_ID PRODUCT_ID   QUANTITY UNIT_PRICE
+------------ ---------- ---------- ---------- ----------
+           1       1001        101          1       1499
+           2       1001        102          1        599
+           3       1002        103          1       1299
+           4       1003        104          1       1999
+           5       1003        105          1        450
+           6       1004        104          1       1999
+           7       1005        105          2        450
+           8       1006        103          1       1299
+
+8 rows selected.
+
+UPDATE Orders
+    SET Total_Amount = 2198.00
+    WHERE Order_ID = 1001;
+
+1 row updated.
+
+UPDATE Orders
+    SET Order_Date = DATE '2026-09-12'
+    WHERE Order_ID = 1002;
+
+1 row updated.
+
+UPDATE Order_Item
+    SET Quantity = 2
+    WHERE OrderItem_ID = 1;
+
+1 row updated.
+
+UPDATE Order_Item
+   SET Unit_Price = 1399.00
+   WHERE OrderItem_ID = 3;
+
+1 row updated.
+
+SELECT
+       o.Order_ID,
+       o.Customer_ID,
+       o.Order_Date,
+       o.Order_Status,
+       o.Total_Amount
+    FROM Orders o
+    ORDER BY o.Customer_ID, o.Order_Date;
+
+  ORDER_ID CUSTOMER_ID ORDER_DAT ORDER_STATUS         TOTAL_AMOUNT
+---------- ----------- --------- -------------------- ------------
+      1001           1 01-SEP-26 Placed                       2198
+      1006           1 12-SEP-26 Confirmed                    1299
+      1002           2 12-SEP-26 Confirmed                    1499
+      1003           3 05-SEP-26 Shipped                      2598
+      1007           3 15-SEP-26 Shipped                      1999
+      1004           4 07-SEP-26 Delivered                    1999
+      1005           5 10-SEP-26 Placed                        450
+      1008           5 18-SEP-26 Delivered                    1049
+
+8 rows selected.
+
+SELECT
+       Customer_ID,
+       COUNT(Order_ID) AS Total_Orders,
+       SUM(Total_Amount) AS Total_Amount
+   FROM Orders
+   GROUP BY Customer_ID
+   ORDER BY Customer_ID;
+
+CUSTOMER_ID TOTAL_ORDERS TOTAL_AMOUNT
+----------- ------------ ------------
+          1            2         3497
+          2            1         1499
+          3            2         4597
+          4            1         1999
+          5            2         1499
