@@ -1,0 +1,300 @@
+
+SQL> CREATE TABLE Review (
+  2      Review_ID NUMBER PRIMARY KEY,
+  3      Customer_ID NUMBER,
+  4      Product_ID NUMBER,
+  5      Review_Text VARCHAR2(500),
+  6      Review_Date DATE
+  7  );
+
+Table created.
+
+SQL> INSERT INTO Review VALUES
+  2  (1, 101, 201, 'Good product quality', DATE '2026-10-01');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (2, 102, 201, 'Worth the price', DATE '2026-10-02');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (3, 103, 202, 'Excellent product', DATE '2026-10-03');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (4, 104, 203, 'Average quality', DATE '2026-10-04');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (5, 105, 202, 'Very useful product', DATE '2026-10-05');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (6, 106, 204, 'Good quality product', DATE '2026-10-06');
+
+1 row created.
+
+SQL> INSERT INTO Review VALUES
+  2  (7, 107, 205, 'Excellent quality', DATE '2026-10-07');
+
+1 row created.
+
+SQL> SELECT * FROM Review;
+
+ REVIEW_ID CUSTOMER_ID PRODUCT_ID
+---------- ----------- ----------
+REVIEW_TEXT
+--------------------------------------------------------------------------------
+REVIEW_DA
+---------
+         1         101        201
+Good product quality
+01-OCT-26
+
+         2         102        201
+Worth the price
+02-OCT-26
+
+ REVIEW_ID CUSTOMER_ID PRODUCT_ID
+---------- ----------- ----------
+REVIEW_TEXT
+--------------------------------------------------------------------------------
+REVIEW_DA
+---------
+
+         3         103        202
+Excellent product
+03-OCT-26
+
+         4         104        203
+Average quality
+
+ REVIEW_ID CUSTOMER_ID PRODUCT_ID
+---------- ----------- ----------
+REVIEW_TEXT
+--------------------------------------------------------------------------------
+REVIEW_DA
+---------
+04-OCT-26
+
+         5         105        202
+Very useful product
+05-OCT-26
+
+         6         106        204
+
+ REVIEW_ID CUSTOMER_ID PRODUCT_ID
+---------- ----------- ----------
+REVIEW_TEXT
+--------------------------------------------------------------------------------
+REVIEW_DA
+---------
+Good quality product
+06-OCT-26
+
+         7         107        205
+Excellent quality
+07-OCT-26
+
+
+7 rows selected.
+
+SQL> CREATE TABLE Rating (
+  2      Rating_ID INT PRIMARY KEY,
+  3      Customer_ID INT,
+  4      Product_ID INT,
+  5      Rating INT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
+  6      Rating_Date DATE NOT NULL,
+  7      FOREIGN KEY (Customer_ID) REFERENCES Customer(ID),
+  8      FOREIGN KEY (Product_ID) REFERENCES Product(Product_ID)
+  9  );
+
+Table created.
+
+
+SQL> INSERT INTO Rating VALUES
+  2  (1, 1, 101, 5, DATE '2026-10-01');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (2, 2, 102, 4, DATE '2026-10-02');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (3, 3, 103, 5, DATE '2026-10-03');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (4, 4, 104, 3, DATE '2026-10-04');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (5, 5, 105, 4, DATE '2026-10-05');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (6, 6, 106, 5, DATE '2026-10-06');
+
+1 row created.
+
+SQL> INSERT INTO Rating VALUES
+  2  (7, 2, 105, 4, DATE '2026-10-07');
+
+1 row created.
+
+
+SQL> SELECT * FROM Rating;
+
+ RATING_ID CUSTOMER_ID PRODUCT_ID     RATING RATING_DA
+---------- ----------- ---------- ---------- ---------
+         1           1        101          5 01-OCT-26
+         2           2        102          4 02-OCT-26
+         3           3        103          5 03-OCT-26
+         4           4        104          3 04-OCT-26
+         5           5        105          4 05-OCT-26
+         6           6        106          5 06-OCT-26
+         7           2        105          4 07-OCT-26
+
+7 rows selected.
+
+
+SQL> SELECT
+  2      R.RATING_ID,
+  3      C.NAME AS CUSTOMER_NAME,
+  4      P.PRODUCT_ID,
+  5      P.PRODUCT_NAME,
+  6      R.RATING,
+  7      R.RATING_DATE
+  8  FROM Rating R
+  9  JOIN Customer C
+ 10      ON R.CUSTOMER_ID = C.ID
+ 11  JOIN Product P
+ 12      ON R.PRODUCT_ID = P.PRODUCT_ID
+ 13  ORDER BY R.RATING_ID;
+
+ RATING_ID CUSTOMER_NAME        PRODUCT_ID
+---------- -------------------- ----------
+PRODUCT_NAME                                           RATING RATING_DA
+-------------------------------------------------- ---------- ---------
+         1 Ramesh                      101
+Laptop                                                      5 01-OCT-26
+
+         2 Khilan                      102
+Smartphone                                                  4 02-OCT-26
+
+         3 Kaushik                     103
+Headphones                                                  5 03-OCT-26
+
+
+ RATING_ID CUSTOMER_NAME        PRODUCT_ID
+---------- -------------------- ----------
+PRODUCT_NAME                                           RATING RATING_DA
+-------------------------------------------------- ---------- ---------
+         4 Chaitali                    104
+Keyboard                                                    3 04-OCT-26
+
+         5 Hardik                      105
+Mouse                                                       4 05-OCT-26
+
+         6 Komal                       106
+Monitor                                                     5 06-OCT-26
+
+
+ RATING_ID CUSTOMER_NAME        PRODUCT_ID
+---------- -------------------- ----------
+PRODUCT_NAME                                           RATING RATING_DA
+-------------------------------------------------- ---------- ---------
+         7 Khilan                      105
+Mouse                                                       4 07-OCT-26
+
+
+7 rows selected.
+
+SQL> SELECT
+  2      PRODUCT_ID,
+  3      ROUND(AVG(RATING), 2) AS AVERAGE_RATING,
+  4      COUNT(RATING_ID) AS TOTAL_RATING
+  5  FROM Rating
+  6  GROUP BY PRODUCT_ID
+  7  ORDER BY PRODUCT_ID;
+
+PRODUCT_ID AVERAGE_RATING TOTAL_RATING
+---------- -------------- ------------
+       101              5            1
+       102              4            1
+       103              5            1
+       104              3            1
+       105              4            2
+       106              5            1
+
+6 rows selected.
+
+SQL> SELECT
+  2      P.PRODUCT_ID,
+  3      P.PRODUCT_NAME,
+  4      ROUND(AVG(R.RATING), 2) AS AVERAGE_RATING
+  5  FROM Product P
+  6  JOIN Rating R
+  7  ON P.PRODUCT_ID = R.PRODUCT_ID
+  8  GROUP BY P.PRODUCT_ID, P.PRODUCT_NAME
+  9  HAVING AVG(R.RATING) >= 4
+ 10  ORDER BY AVERAGE_RATING DESC;
+
+PRODUCT_ID PRODUCT_NAME                                       AVERAGE_RATING
+---------- -------------------------------------------------- --------------
+       101 Laptop                                                          5
+       103 Headphones                                                      5
+       106 Monitor                                                         5
+       105 Mouse                                                           4
+       102 Smartphone                                                      4
+
+SQL> SELECT
+  2      P.PRODUCT_ID,
+  3      P.PRODUCT_NAME,
+  4      ROUND(AVG(R.RATING), 2) AS AVERAGE_RATING,
+  5      COUNT(R.RATING_ID) AS TOTAL_RATINGS
+  6  FROM Product P
+  7  JOIN Rating R
+  8  ON P.PRODUCT_ID = R.PRODUCT_ID
+  9  GROUP BY P.PRODUCT_ID, P.PRODUCT_NAME
+ 10  ORDER BY P.PRODUCT_ID;
+
+PRODUCT_ID PRODUCT_NAME                                       AVERAGE_RATING
+---------- -------------------------------------------------- --------------
+TOTAL_RATINGS
+-------------
+       101 Laptop                                                          5
+            1
+
+       102 Smartphone                                                      4
+            1
+
+       103 Headphones                                                      5
+            1
+
+
+PRODUCT_ID PRODUCT_NAME                                       AVERAGE_RATING
+---------- -------------------------------------------------- --------------
+TOTAL_RATINGS
+-------------
+       104 Keyboard                                                        3
+            1
+
+       105 Mouse                                                           4
+            2
+
+       106 Monitor                                                         5
+            1
+
+
+6 rows selected.
